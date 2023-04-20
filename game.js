@@ -19,7 +19,14 @@ const startGame = (homeTeam, awayTeam) => {
   }
 }
 
+// Define a function to remove a game
+const removeGame = (homeTeam, awayTeam) => {
+  onError({ homeTeam, awayTeam })
+  return delete games[`${UpperCaseFirstWord(homeTeam)}-${UpperCaseFirstWord(awayTeam)}`]
+}
+
 module.exports = {
   startGame,
-  resetGames
+  resetGames,
+  removeGame,
 }

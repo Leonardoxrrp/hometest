@@ -1,6 +1,8 @@
 const UpperCaseFirstWord = (word) => {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-  }
+      return word
+        .trim().charAt(0).toUpperCase() + word.trim().slice(1).toLowerCase()
+        .replace(/\s+/g, "")
+}
   
 const onError = ({homeTeam, awayTeam, games, newGame }) => {
     if (!homeTeam || !awayTeam) {
