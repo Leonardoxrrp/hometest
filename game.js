@@ -25,8 +25,25 @@ const removeGame = (homeTeam, awayTeam) => {
   return delete games[`${UpperCaseFirstWord(homeTeam)}-${UpperCaseFirstWord(awayTeam)}`]
 }
 
+// Define a function to update a game
+const updateScore = (homeTeam, awayTeam, homeScore, awayScore) => {
+  onError({ homeTeam, awayTeam });
+  const game = `${UpperCaseFirstWord(homeTeam)}-${UpperCaseFirstWord(awayTeam)}`
+  if(games[game]) {
+    games[game] = {
+      ...games[game],
+      home: homeScore,
+      away: awayScore,
+    }
+    return games[game]
+  } else {
+    throw new Error("Cannot update an unexisting game");
+  }
+}
+
 module.exports = {
   startGame,
   resetGames,
   removeGame,
+  updateScore,
 }

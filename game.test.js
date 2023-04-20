@@ -1,10 +1,10 @@
-const { startGame, removeGame, resetGames } = require("./game.js");
+const { startGame, removeGame, updateScore, resetGames } = require("./game.js");
+
+beforeEach(() => {
+    resetGames();
+});
 
 describe("startGame", () => {
-    beforeEach(() => {
-        resetGames();
-    });
-  
     test("Should add a game", () => {
         games = startGame("Mexico", "Argentina")
         expect(games.game).toEqual("Mexico-Argentina")
@@ -39,9 +39,6 @@ describe("startGame", () => {
 })
 
 describe("removeGame", () => {
-    beforeEach(() => {
-        resetGames();
-    });
     test("Should remove a game", () => {
         games = startGame("Canada", "Peru")
         expect(games.game).toEqual("Canada-Peru")
@@ -66,5 +63,41 @@ describe("removeGame", () => {
     test("Should throw error if no awayTeam is specified", () => {
         startGame("Canada", "Peru")
         expect(() => removeGame("Peru", undefined)).toThrowError("Both home and away teams must be specified")
+    })
+})
+
+describe("updateScore", () => {
+    test("Should update a game", () => {
+        startGame("Canada", "Peru")
+        const updated = updateScore("Canada", "Peru", 10, 20)
+        expect(updated.home).toEqual(10)
+        expect(updated.away).toEqual(20)
+    })
+    test("Should not update an unexisting game", () => {
+        startGame("Mexico", "Argentina")
+        expect(() => updateScore("Peru", "Venezuela")).toThrowError("Cannot update an unexisting game")
+    })
+    test("Should uppercase the first letter only", () => {
+        startGame("meXiCO", "arGENtINA")
+        games = updateScore("meXiCO", "arGENtINA")
+        expect(games.game).toEqual("Mexico-Argentina")
+    })
+    test("Should remove trailing whitespace", () => {
+        startGame("  Mexico   ", "  Argentina  ")
+        games = updateScore("  Mexico   ", "  Argentina  ")
+        expect(games.game).toEqual("Mexico-Argentina")
+    })
+    test("Should remove whitespace in between words", () => {
+        startGame("M ex ic o", "A r   gen tina")
+        games = updateScore("M ex ic o", "A r   gen tina")
+        expect(games.game).toEqual("Mexico-Argentina")
+    })
+    test("Should throw error if no homeTeam is specified", () => {
+        startGame("Canada", "Peru")
+        expect(() => updateScore(undefined, "Peru")).toThrowError("Both home and away teams must be specified")
+    })
+    test("Should throw error if no awayTeam is specified", () => {
+        startGame("Canada", "Peru")
+        expect(() => updateScore("Peru", undefined)).toThrowError("Both home and away teams must be specified")
     })
 })
