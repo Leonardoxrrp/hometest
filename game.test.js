@@ -1,4 +1,4 @@
-const { startGame, removeGame, updateScore, resetGames } = require("./game.js");
+const { startGame, removeGame, updateScore, getSummary, resetGames } = require("./game.js");
 
 beforeEach(() => {
     resetGames();
@@ -99,5 +99,35 @@ describe("updateScore", () => {
     test("Should throw error if no awayTeam is specified", () => {
         startGame("Canada", "Peru")
         expect(() => updateScore("Peru", undefined)).toThrowError("Both home and away teams must be specified")
+    })
+})
+
+describe("getSummary", () => {
+    test("Should get summary of all games", () => {
+        const mockSummary = ["Canada 0 - Peru 0", "Peru 0 - Venezuela 0", "Australia 2 - France 5"]
+        startGame("Canada", "Peru")
+        startGame("Peru", "Venezuela")
+        startGame("Australia", "France")
+        updateScore("Australia", "France", 2, 5)
+        const summary = getSummary()
+        expect(summary).toEqual(mockSummary)
+    })
+    test("Should return games sorted according to when they were added in the system", () => {
+        const mockSummary = ["Canada 0 - Peru 0", "Peru 0 - Venezuela 0", "Australia 0 - France 0"]
+        startGame("Canada", "Peru")
+        startGame("Australia", "France")
+        startGame("Peru", "Venezuela")
+        let summary = getSummary()
+        expect(summary).not.toEqual(mockSummary)
+        removeGame("Peru", "Venezuela")
+        removeGame("Australia", "France")
+        startGame("Peru", "Venezuela")
+        startGame("Australia", "France")
+        summary = getSummary()
+        expect(summary).toEqual(mockSummary)
+    })
+    test("Should return null if there are no games", () => {
+        const summary = getSummary()
+        expect(summary).toBeNull()
     })
 })

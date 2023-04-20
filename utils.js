@@ -11,7 +11,7 @@ const onError = ({homeTeam, awayTeam, games, newGame }) => {
     if (homeTeam === awayTeam) {
       throw new Error("Home and away teams cannot be the same");
     }
-     if (newGame && `${homeTeam}-${awayTeam}` in games) {
+     if (newGame && `${homeTeam}${awayTeam}` in games) {
       throw new Error("Game already exists");
     }
 }
